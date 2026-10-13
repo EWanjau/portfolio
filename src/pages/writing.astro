@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import Parser from 'rss-parser';
+
+interface Post {
+  title: string;
+  link: string;
+  date: string;
+}
+
+let posts: Post[] = [];
+let fetchError = false;
+
+try {
+  const parser: Parser<{ pubDate?: string }> = new Parser();
+  const feed = await parser.parseURL('https://dev.to/feed/erasto');
+  posts = (feed.items ?? []).slice(0, 10).map((item) => ({
+    title: item.title ?? 'Untitled',
+    link: item.link ?? 'https://dev.to/erasto',
+    date: new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })
+      .format(new Date(item.pubDate ?? Date.now())),
+  }));
+} catch {
+  fetchError = true;
+}
+---
+
+<Base title="Writing — Erasto Wanjau">
+  <h1>Writing</h1>
+  <p class="muted">
+    Articles I publish on <a href="https://dev.to/erasto">dev.to</a>, pulled in automatically
+    when this site builds.
+  </p>
+
+  {fetchError && (
+    <p>
+      Couldn't load the feed right now — head over to
+      <a href="https://dev.to/erasto">dev.to/erasto</a> to read the latest.
+    </p>
+  )}
+
+  {posts.map((post) => (
+    <div class="post-item">
+      <a href={post.link}>{post.title}</a>
+      <div class="date">{post.date}</div>
+    </div>
+  ))}
+
+  {!fetchError && posts.length === 0 && (
+    <p class="muted">No articles yet — first one is in progress.</p>
+  )}
+</Base>

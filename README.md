@@ -1,42 +1,24 @@
-# Lunch Orders
+# Portfolio
 
-A simple repo for tracking team lunch orders — who wants what, from where, and when.
+Source for my personal portfolio site — **Erasto Wanjau — Data Scientist** — a static [Astro](https://astro.build) site deployed on Vercel's free Hobby tier.
 
-## Purpose
+- **Live**: https://erasto-wanjau.vercel.app
+- **Writing**: the article list is pulled at build time from [dev.to/erasto](https://dev.to/erasto)
+- **Résumé**: served from `public/resume.pdf` — drop the PDF there to publish it
 
-- Collect everyone's lunch order in one place instead of scattered chats
-- Keep a record of past orders (useful for repeat favourites and splitting costs)
-- Make the daily "what are we eating?" decision easier
+## Work on it
 
-## Suggested structure
-
-```
-lunch_orders/
-├── README.md
-├── orders/          # One file per day, e.g. 2026-10-13.md
-└── restaurants.md   # List of go-to spots, menus, and delivery details
+```bash
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # static output in dist/
 ```
 
-## How to add an order
+## Add a case study
 
-1. Create (or open) today's file in `orders/`, named with the date: `YYYY-MM-DD.md`
-2. Add your order under the restaurant heading for the day:
+1. Create `src/content/case-studies/<slug>.md` (copy an existing file's frontmatter)
+2. Optionally drop charts into `public/images/case-studies/<slug>/`
+3. Set `status: final` once the numbers are verified — drafts render with a badge
+4. Commit and push to `main`; Vercel redeploys automatically
 
-```markdown
-# Lunch — 2026-10-13
-
-**Ordering from:** Mama Oliech's
-
-| Name     | Order                    | Price |
-| -------- | ------------------------ | ----- |
-| Wanjau   | Fish fillet + ugali      | 450   |
-| Alice    | Chicken curry + chapati  | 400   |
-```
-
-3. Commit your change: `git add orders/ && git commit -m "Add orders for 2026-10-13"`
-
-## Conventions
-
-- One file per day, in `orders/`, named `YYYY-MM-DD.md`
-- Include the restaurant name and the person placing the order
-- Update your entry before the daily cutoff if you change your mind
+Push to `main` = deploy. Nothing else to run.

@@ -1,0 +1,39 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const studies = (await getCollection('case-studies'))
+  .sort((a, b) => a.data.order - b.data.order)
+---
+
+<Base>
+  <section class="hero">
+    <p class="kicker">Data Scientist · Nairobi</p>
+    <h1>Erasto Wanjau</h1>
+    <p class="lede">
+      I turn messy data into decisions — from hospital revenue dashboards to ML models that
+      predict World Cup outcomes. Analytics-led, with the engineering depth to ship.
+    </p>
+    <p>
+      <a href="/case-studies/">Browse case studies</a> ·
+      <a href="https://github.com/EWanjau">GitHub</a> ·
+      <a href="https://dev.to/erasto">Writing on dev.to</a>
+    </p>
+  </section>
+
+  <div class="section-head">
+    <h2>Featured work</h2>
+    <a href="/case-studies/" class="muted">All case studies →</a>
+  </div>
+
+  {studies.map((study) => (
+    <a class="card" href={`/case-studies/${study.id}/`}>
+      <h3>
+        {study.data.title}
+        {study.data.status === 'draft' && <span class="badge-draft">draft</span>}
+      </h3>
+      <p>{study.data.description}</p>
+      <ul class="tags">{study.data.tools.map((t) => <li>{t}</li>)}</ul>
+    </a>
+  ))}
+</Base>

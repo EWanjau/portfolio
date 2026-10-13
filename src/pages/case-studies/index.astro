@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const studies = (await getCollection('case-studies'))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title="Case Studies — Erasto Wanjau">
+  <h1>Case Studies</h1>
+  <p class="muted">
+    Written accounts of real projects: the problem, the approach, and what came out of it.
+  </p>
+
+  {studies.map((study) => (
+    <a class="card" href={`/case-studies/${study.id}/`}>
+      <h3>
+        {study.data.title}
+        {study.data.status === 'draft' && <span class="badge-draft">draft</span>}
+      </h3>
+      <p>{study.data.description}</p>
+      <ul class="tags">{study.data.tools.map((t) => <li>{t}</li>)}</ul>
+    </a>
+  ))}
+</Base>

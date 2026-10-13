@@ -1,0 +1,34 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const studies = await getCollection('case-studies');
+  return studies.map((study) => ({ params: { slug: study.id }, props: { study } }));
+}
+
+const { study } = Astro.props;
+const { Content } = await render(study);
+const { title, description, pubDate, tools, projectUrl, demoUrl, status } = study.data;
+
+const dateFmt = new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'long' });
+---
+
+<Base title={`${title} — Erasto Wanjau`} description={description}>
+  <article class="prose">
+    <h1>
+      {title}
+      {status === 'draft' && <span class="badge-draft">draft — numbers pending verification</span>}
+    </h1>
+    <div class="meta-row">
+      <span>{dateFmt.format(pubDate)}</span>
+      {tools.length > 0 && <span>{tools.join(' · ')}</span>}
+      {projectUrl && <a href={projectUrl}>Source code →</a>}
+      {demoUrl && <a href={demoUrl}>Live demo →</a>}
+    </div>
+
+    <Content />
+
+    <p><a href="/case-studies/">← All case studies</a></p>
+  </article>
+</Base>

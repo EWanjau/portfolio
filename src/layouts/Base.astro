@@ -1,0 +1,76 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Erasto Wanjau — Data Scientist',
+  description = 'Portfolio of Erasto Wanjau, a Nairobi-based data scientist: analytics case studies, machine learning projects, and writing.',
+} = Astro.props;
+
+const nav = [
+  { href: '/', label: 'Home' },
+  { href: '/case-studies/', label: 'Case Studies' },
+  { href: '/about/', label: 'About' },
+  { href: '/writing/', label: 'Writing' },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) =>
+  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" href="https://dev.to/feed/erasto" title="Erasto on dev.to" />
+    <title>{title}</title>
+    <script is:inline>
+      const theme = localStorage.getItem('theme') ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="inner">
+        <a class="brand" href="/">Erasto Wanjau</a>
+        <nav class="nav">
+          {nav.map((item) => (
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+          ))}
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode">◐</button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="inner">
+        <span>© {new Date().getFullYear()} Erasto Wanjau</span>
+        <span>
+          <a href="https://github.com/EWanjau">GitHub</a> ·
+          <a href="https://dev.to/erasto">dev.to</a> ·
+          <a href="mailto:wamwanjau@gmail.com">wamwanjau@gmail.com</a>
+        </span>
+      </div>
+    </footer>
+
+    <script is:inline>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const dark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      });
+    </script>
+  </body>
+</html>
